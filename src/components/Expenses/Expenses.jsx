@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from './Card';
+import Card from '../UI/Card';
 import ExpenseItem from './ExpenseItem';
 import './Expenses.css';
 
-function Expenses(props) {
+const Expenses = (props) => {
   const { expenses } = props;
   return (
     <Card className="expenses">
@@ -18,7 +18,7 @@ function Expenses(props) {
       ))}
     </Card>
   );
-}
+};
 
 Expenses.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.exact({

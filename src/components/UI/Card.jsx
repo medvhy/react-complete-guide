@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Card.css';
 
-function Card(props) {
+const Card = (props) => {
   const { children, className } = props;
   const cssClasses = `card ${className}`;
   return (
@@ -10,7 +10,7 @@ function Card(props) {
       { children }
     </div>
   );
-}
+};
 
 Card.propTypes = {
   children: PropTypes.node.isRequired,
