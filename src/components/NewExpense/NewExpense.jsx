@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useContext } from 'react';
+import ExpenseContext from '../../store/expense-context';
 import ExpenseForm from './ExpenseForm';
 import './NewExpense.css';
 
-const NewExpense = (props) => {
-  const { onAddExpense } = props;
+const NewExpense = () => {
+  const expenseContext = useContext(ExpenseContext);
   const [isEditing, setIsEditing] = useState(false);
 
   const startEditingHandler = () => {
@@ -22,7 +22,7 @@ const NewExpense = (props) => {
       amount: +enteredExpenseData.amount,
       id: Math.random().toString(),
     };
-    onAddExpense(expenseData);
+    expenseContext.onAddExpense(expenseData);
     stopEditingHandler();
   };
 
@@ -37,10 +37,6 @@ const NewExpense = (props) => {
       ) }
     </div>
   );
-};
-
-NewExpense.propTypes = {
-  onAddExpense: PropTypes.func.isRequired,
 };
 
 export default NewExpense;

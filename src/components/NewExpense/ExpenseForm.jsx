@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './ExpenseForm.css';
 
 const ExpenseForm = (props) => {
   const { onSaveExpenseData, onCancel } = props;
 
+  const [typingMessage, setTypingMessage] = useState('');
   const [userInput, setUserInput] = useState({
     title: '',
     amount: '',
@@ -22,6 +23,17 @@ const ExpenseForm = (props) => {
     event.preventDefault();
     onSaveExpenseData(userInput);
   };
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      setTypingMessage('');
+    }, 1500);
+
+    return () => {
+      setTypingMessage('The user is typing a new expense');
+      clearTimeout(identifier);
+    };
+  }, [userInput]);
 
   return (
     <form onSubmit={submitHandler}>
@@ -44,6 +56,9 @@ const ExpenseForm = (props) => {
             <input type="date" name="date" min="2019-01-01" max="2020-12-31" value={userInput.date} onChange={inputChangeHandler} />
           </label>
         </div>
+      </div>
+      <div className="new-expense__actions">
+        <p>{typingMessage}</p>
       </div>
       <div className="new-expense__actions">
         <button type="button" onClick={onCancel}>Cancel</button>

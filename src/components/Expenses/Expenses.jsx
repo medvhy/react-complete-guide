@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useContext } from 'react';
 import Card from '../UI/Card';
+import ExpenseContext from '../../store/expense-context';
 import ExpensesFilter from './ExpensesFilter';
 import ExpensesChart from './ExpensesChart';
 import ExpensesList from './ExpensesList';
 import './Expenses.css';
 
-const Expenses = (props) => {
-  const { expenses } = props;
+const Expenses = () => {
+  const expenseContext = useContext(ExpenseContext);
   const [filteredYear, setFilteredYear] = useState('2020');
 
   const filterChangeHandler = (selectedYear) => {
     setFilteredYear(selectedYear);
   };
 
-  const filteredExpenses = expenses.filter((expense) => {
+  const filteredExpenses = expenseContext.expenses.filter((expense) => {
     const fullYear = expense.date.getFullYear();
     return fullYear.toString() === filteredYear;
   });
@@ -26,15 +26,6 @@ const Expenses = (props) => {
       <ExpensesList expenses={filteredExpenses} />
     </Card>
   );
-};
-
-Expenses.propTypes = {
-  expenses: PropTypes.arrayOf(PropTypes.exact({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    date: PropTypes.instanceOf(Date).isRequired,
-    amount: PropTypes.number.isRequired,
-  })).isRequired,
 };
 
 export default Expenses;

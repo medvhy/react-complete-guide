@@ -19,11 +19,10 @@ const ExpensesChart = (props) => {
     { label: 'Dec', value: 0 },
   ];
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const expense of expenses) {
+  expenses.forEach((expense) => {
     const expenseMonth = expense.date.getMonth();
     chartDataPoints[expenseMonth].value += expense.amount;
-  }
+  });
 
   return <Chart dataPoints={chartDataPoints} />;
 };
