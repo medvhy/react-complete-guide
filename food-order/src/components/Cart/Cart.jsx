@@ -1,12 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CartContext from '../../store/cart-context';
 import CartItem from './CartItem';
+import Checkout from './Checkout';
 import Modal from '../UI/Modal';
 import classes from './Cart.module.css';
 
 const Cart = (props) => {
   const { onHideCart } = props;
+  const [orders, setOrders] = useState([]);
+  const [isCheckOut, setIsCheckOut] = useState(false);
   const cartContext = useContext(CartContext);
 
   const cartItemAddHandler = (item) => {
@@ -15,6 +18,16 @@ const Cart = (props) => {
 
   const cartItemRemoveHandler = (id) => {
     cartContext.removeItem(id);
+  };
+
+  const onOrderHandler = () => {
+    setIsCheckOut(true);
+  };
+
+  const onSubmitOrderHandler = (orderData) => {
+    setOrders((prevOrder) => prevOrder.concat(orderData));
+    setIsCheckOut(false);
+    cartContext.clearCart();
   };
 
   const cartItems = cartContext
@@ -33,9 +46,23 @@ const Cart = (props) => {
     ));
   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
   const hasItems = cartContext.items.length > 0;
+  const pendingOrdersMessage = `You have ${orders.length} pending orders.`;
+  const modalActions = isCheckOut
+    ? (<Checkout onConfirmOrder={onSubmitOrderHandler} onCancel={onHideCart} />)
+    : (
+      <div className={classes.actions}>
+        <button type="button" className={classes['button--alt']} onClick={onHideCart}>Close</button>
+        { hasItems && <button type="button" className={classes.button} onClick={onOrderHandler}>Order</button> }
+      </div>
+    );
 
   return (
     <Modal onClickBackdrop={onHideCart}>
+      <div>
+        <p>
+          { pendingOrdersMessage }
+        </p>
+      </div>
       <ul className={classes['cart-items']}>
         { cartItems }
       </ul>
@@ -43,10 +70,7 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{ totalAmount }</span>
       </div>
-      <div className={classes.actions}>
-        <button type="button" className={classes['button--alt']} onClick={onHideCart}>Close</button>
-        { hasItems && <button type="button" className={classes.button}>Order</button> }
-      </div>
+      { modalActions }
     </Modal>
   );
 };
